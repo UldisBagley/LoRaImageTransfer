@@ -37,8 +37,8 @@ int main(){
     modem.rx.callback = rx_f;
     modem.rx.data.userPtr = (void *)(&modem);//To handle with chip from rx callback
     modem.tx.data.userPtr = (void *)(&modem);//To handle with chip from tx callback
-    memcpy(modem.tx.data.buf, "Pin", 5);//copy data we'll sent to buffer
-    modem.tx.data.size = 260;//Payload len
+    memcpy(modem.tx.data.buf, "Ping", 5);//copy data we'll sent to buffer
+    modem.tx.data.size = 5;//Payload len
     modem.eth.preambleLen=6;
     modem.eth.bw = BW62_5;//Bandwidth 62.5KHz
     modem.eth.sf = SF12;//Spreading Factor 12

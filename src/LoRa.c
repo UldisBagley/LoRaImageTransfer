@@ -273,10 +273,10 @@ void LoRa_calculate_packet_t(LoRa_ctl *modem){
 	unsigned bw = BW_VAL[(modem->eth.bw>>4)];
 	unsigned sf = modem->eth.sf>>4;
 	unsigned char ecr = 4+(modem->eth.ecr/2);
-	unsigned int payload;
-	if(modem->eth.implicitHeader){
-		payload = modem->eth.payloadLen;
-	}
+	unsigned char payload;
+ 	if(modem->eth.implicitHeader){
+ 		payload = modem->eth.payloadLen;
+ 	}
 	else{
 		payload = modem->tx.data.size;
 	}
@@ -302,7 +302,7 @@ void lora_set_addr_ptr(int spid, unsigned char addr){
 	lora_reg_write_byte(spid, REG_FIFO_ADDR_PTR, addr);
 }
 
-unsigned char lora_write_fifo(int spid, char *buf, unsigned int size){
+unsigned char lora_write_fifo(int spid, char *buf, unsigned char size){
 	lora_set_addr_ptr(spid, TX_BASE_ADDR);
 	lora_set_payload(spid, size);
 	return lora_reg_write_bytes(spid, REG_FIFO, buf, size);
@@ -387,7 +387,7 @@ void lora_set_preamble(int spid, unsigned int preambleLen){
 	lora_reg_write_bytes(spid, REG_PREAMBLE_MSB, (char *)&len_revers, 2);
 }
 
-void lora_set_payload(int spid, unsigned int payload){
+void lora_set_payload(int spid, unsigned char payload){
 	lora_reg_write_byte(spid, REG_PAYLOAD_LENGTH, payload);
 }
 
@@ -433,7 +433,7 @@ int lora_reg_write_byte(int spid, unsigned char reg, unsigned char byte){
 	return spiXfer(spid, tx, rx, 2);
 }
 
-int lora_reg_read_bytes(int spid, unsigned char reg, char *buff, unsigned int size){
+int lora_reg_read_bytes(int spid, unsigned char reg, char *buff, unsigned char size){
 	int ret;
 	char tx[257];
 	char rx[257];
@@ -447,7 +447,7 @@ int lora_reg_read_bytes(int spid, unsigned char reg, char *buff, unsigned int si
 	return ret;
 }
 
-int lora_reg_write_bytes(int spid, unsigned char reg, char *buff, unsigned int size){
+int lora_reg_write_bytes(int spid, unsigned char reg, char *buff, unsigned char size){
 	char tx[257];
 	char rx[257];
 	memset(tx, '\0', 257);

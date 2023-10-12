@@ -145,7 +145,7 @@ typedef struct{
 
 typedef struct{
     char *buf;
-    unsigned int size;//Size of buffer. Used in Explicit header mode. 255 MAX size when unsigned char
+    unsigned char size;//Size of buffer. Used in Explicit header mode. 255 MAX size when unsigned char
     struct timeval last_time;
     double Tsym;
     double Tpkt;
@@ -165,7 +165,7 @@ typedef void (*txDoneISR)(int gpio_n, int level, uint32_t tick, void *userdata);
 
 typedef struct{
     char buf[1001]; //256
-    unsigned int size;
+    unsigned char size;
     struct timeval last_time;
     float SNR;
     int RSSI;
@@ -209,13 +209,13 @@ void lora_set_crc_off(int spid);
 void lora_set_bandwidth(int spid, BandWidth bw);
 void lora_set_errorcr(int spid, ErrorCodingRate cr);
 void lora_set_freq(int spid, double freq);
-void lora_set_payload(int spid, unsigned int payload);
+void lora_set_payload(int spid, unsigned char payload);
 void lora_reset(unsigned char gpio_n);
 void lora_reset_irq_flags(int spid);
 unsigned char lora_reg_read_byte(int spid, unsigned char reg);
 int lora_reg_write_byte(int spid, unsigned char reg, unsigned char byte);
-int lora_reg_read_bytes(int spid, unsigned char reg, char *buff, unsigned int size);
-int lora_reg_write_bytes(int spid, unsigned char reg, char *buff, unsigned int size);
+int lora_reg_read_bytes(int spid, unsigned char reg, char *buff, unsigned char size);
+int lora_reg_write_bytes(int spid, unsigned char reg, char *buff, unsigned char size);
 void lora_set_rxcont_mode(int spid);
 void lora_set_tx_mode(int spid);
 void lora_set_sleep_mode(int spid);
@@ -234,7 +234,7 @@ unsigned char lora_get_op_mode(int spid);
 void lora_set_addr_ptr(int spid, unsigned char addr);
 void lora_set_lowdatarateoptimize_on(int spid);
 void lora_set_lowdatarateoptimize_off(int spid);
-unsigned char lora_write_fifo(int spid, char *buf, unsigned int size);
+unsigned char lora_write_fifo(int spid, char *buf, unsigned char size);
 void lora_get_rssi_pkt(LoRa_ctl *modem);
 void lora_get_rssi_cur(LoRa_ctl *modem);
 void lora_get_snr(LoRa_ctl *modem);
