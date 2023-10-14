@@ -164,7 +164,7 @@ typedef struct{
 typedef void (*txDoneISR)(int gpio_n, int level, uint32_t tick, void *userdata);
 
 typedef struct{
-    char buf[1001]; //256
+    char buf[256]; //256
     unsigned char size;
     struct timeval last_time;
     float SNR;
