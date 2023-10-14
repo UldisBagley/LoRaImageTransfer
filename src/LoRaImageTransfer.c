@@ -26,6 +26,8 @@
 #include "LoRa.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image/stb_image.h"
@@ -33,11 +35,17 @@
 #include "stb_image/stb_image_write.h"
 
 /**
- * @brief Funciton to return the size of a file in bytes?
+ * @brief Funciton to return the size of a file in bytes
  * @param fp a pointer to the file
- * @returns the size of the file in bytes?
+ * @returns the size of the file in bytes
 */
 int fileSize(FILE *fp);
+
+/**
+ * @brief Counts the number of files in a directory (hard coded)
+ * @returns the number of files in the directory
+*/
+int nbOfFilesInDirectory(void);
 
 void tx_f(txData *tx){
     LoRa_ctl *modem = (LoRa_ctl *)(tx->userPtr);
@@ -97,6 +105,13 @@ int main(){
     modem.eth.syncWord = 0x12;
     //For detail information about SF, Error Coding Rate, Explicit header, Bandwidth, AGC, Over current protection and other features refer to sx127x datasheet https://www.semtech.com/uploads/documents/DS_SX1276-7-8-9_W_APP_V5.pdf
 
+    // Count the number of files in the directory
+    int nbOfFiles;
+    nbOfFiles = nbOfFilesInDirectory();
+
+    printf("Number of files in the directory: %d\n",nbOfFiles);
+    // Wait for file nb response
+
     FILE* imageFile;
     imageFile = fopen("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyUltraSmallGrey.jpg", "r");
 
@@ -112,8 +127,6 @@ int main(){
 	printf("Width: %d\n", width);
 	printf("Height: %d\n", height);
 	printf("Channels: %d\n", channels);
-	// uint8_t imageSize_Bytes = (uint8_t)sizeof(*img);
-	// printf("Image size in bytes: %d\n", imageSize_Bytes);
 
     if(img == NULL) {
         printf("Error in loading the image\n");
@@ -181,7 +194,8 @@ int main(){
     LoRa_end(&modem);
 }
 
-int fileSize(FILE *fp){
+int fileSize(FILE *fp)
+{
     int prev=ftell(fp);
     fseek(fp, 0L, SEEK_END);
     int size=ftell(fp);
@@ -189,3 +203,23 @@ int fileSize(FILE *fp){
     return size;
 }
 
+int nbOfFilesInDirectory(void)
+{
+    int file_count = 0;
+    DIR * dirp;
+    struct dirent * entry;
+
+    dirp = opendir("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/"); /* There should be error handling after this */
+    if (dirp == NULL)
+    {
+        printf("Error opening directory");
+    }
+    while ((entry = readdir(dirp)) != NULL) {
+        if (entry->d_type == DT_REG) { /* If the entry is a regular file */
+            file_count++;
+        }
+    }
+    closedir(dirp);
+
+    return file_count;
+}
