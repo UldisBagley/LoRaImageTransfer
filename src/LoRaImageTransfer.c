@@ -67,6 +67,7 @@ void writeFileToPath(unsigned char* jpgBuffer, const char* newFilePath, int file
 
 int sizeOfFile_Bytes;
 bool transferSuccessFlag;
+static int extractedInt;
 
 void tx_f(txData *tx){
     LoRa_ctl *modem = (LoRa_ctl *)(tx->userPtr);
@@ -94,16 +95,16 @@ void * rx_f(void *p){
     printf("RSSI: %d;\t", rx->RSSI);
     printf("SNR: %f\n", rx->SNR);
 
-    int extractedInt;
+    
     if (rx->size >= sizeof(int)) {
-        memcpy(&extractedInt, rx->buf, sizeof(int));
+        extractedInt = atoi(rx->buf); //convert string to int
         // 'extractedInt' now contains the integer value.
     } else {
         // Handle the case where the buffer doesn't contain enough data for an int.
         printf("Not enough buffer size for int");
     }
 
-    printf("Extracted int i.e. the number of received files: %d", extractedInt);
+    printf("Extracted int i.e. the number of received files: %d\n", extractedInt);
 
     // Set successful transfer flag:
     transferSuccessFlag = true;
@@ -113,7 +114,6 @@ void * rx_f(void *p){
 
     return NULL;
 }
-
 
 int main(){
 
@@ -139,7 +139,7 @@ int main(){
     //memcpy(modem.tx.data.buf, "Ping", 5);//copy data we'll sent to buffer
     modem.eth.preambleLen=6;
     modem.eth.bw = BW250;//Bankdwidth 250kHz//BW62_5;//Bandwidth 62.5KHz
-    modem.eth.sf = SF12;//Spreading Factor 7//SF12;//Spreading Factor 12
+    modem.eth.sf = SF7;//Spreading Factor 7//SF12;//Spreading Factor 12
     modem.eth.ecr = CR5;//Error coding rate CR4/8 //CR8
     modem.eth.CRC = 0;//Turn off CRC checking
     modem.eth.freq = 434800000;// 434.8MHz
@@ -211,13 +211,26 @@ int main(){
 
         FILE* imageFile;
         static int i = 0;
+        // if (nbOfFilesSent < nbOfFiles)
+        // {
+        //     sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
+        //     sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
+        //     printf("%s\n", filePath);
+        //     nbOfFilesSent++;
+        // }
         if (nbOfFilesSent < nbOfFiles)
         {
-            sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
-            sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
-            printf("%s\n", filePath);
+            //Avoiding nonsensical segmentation fault
             nbOfFilesSent++;
+            nbOfFilesSent--;
+
+            printf("Test6\n");
+            sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.jpg", nbOfFilesSent - 1);
+            printf("Test7\n");
+            sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.jpg", nbOfFilesSent - 1);
+            printf("%s\n", filePath);
         }
+        
 
         imageFile = fopen(fileName, "r");
 
@@ -245,9 +258,27 @@ int main(){
         printf("Tpkt: %f;\t", modem.tx.data.Tpkt);
         printf("payloadSymbNb: %u\n", modem.tx.data.payloadSymbNb);
         
-        while(LoRa_get_op_mode(&modem) != SLEEP_MODE){
-            sleep(1);
+        int sleepTimeLeft = 0;
+        while((LoRa_get_op_mode(&modem) != SLEEP_MODE) && (nbOfFilesSent != extractedInt)){
+            printf("Number of files sent: %d\n", nbOfFilesSent);
+            sleepTimeLeft = sleep(1);
+            printf("Senconds of sleeptime left %d seconds\n", sleepTimeLeft);
+
+            // If files sent does not match the number of files returned then send again
+            if ((nbOfFilesSent > extractedInt))// && (firstTime != true))
+            {
+                    LoRa_end(&modem);
+                    LoRa_begin(&modem);
+                    LoRa_send(&modem);
+                    printf("resend string: \"%02x\"\n\n", *modem.tx.data.buf);
+            }
         }
+
+        nbOfFilesSent = extractedInt; //Set files sent to equal number received so that above condition works next time
+
+        // while(LoRa_get_op_mode(&modem) != SLEEP_MODE){
+        //     sleep(1);
+        // }
 
         // while (transferSuccessFlag != true)
         // {
@@ -260,8 +291,193 @@ int main(){
         //stbi_image_free(img);
         transferSuccessFlag = false;
         LoRa_end(&modem);
+
+        if (nbOfFilesSent == nbOfFiles) break;
+
+        nbOfFilesSent++;
+        
     }
 }
+// int main(){
+
+//     char txbuf[255]; //255
+//     char rxbuf[255]; //255
+//     LoRa_ctl modem;
+// 	int width, height, channels;
+
+//     transferSuccessFlag = false;
+
+//     //unsigned char *img2;
+//     //int* sizeOffile = malloc(sizeof(int));;
+
+//     //*sizeOffile = 100;
+
+//     //See for typedefs, enumerations and there values in LoRa.h header file
+//     modem.spiCS = 0;//Raspberry SPI CE pin number
+//     modem.tx.callback = tx_f;
+//     modem.tx.data.buf = txbuf;
+//     modem.rx.callback = rx_f;
+//     modem.rx.data.userPtr = (void *)(&modem);//To handle with chip from rx callback
+//     modem.tx.data.userPtr = (void *)(&modem);//To handle with chip from tx callback
+//     //memcpy(modem.tx.data.buf, "Ping", 5);//copy data we'll sent to buffer
+//     modem.eth.preambleLen=6;
+//     modem.eth.bw = BW250;//Bankdwidth 250kHz//BW62_5;//Bandwidth 62.5KHz
+//     modem.eth.sf = SF12;//Spreading Factor 7//SF12;//Spreading Factor 12
+//     modem.eth.ecr = CR5;//Error coding rate CR4/8 //CR8
+//     modem.eth.CRC = 0;//Turn off CRC checking
+//     modem.eth.freq = 434800000;// 434.8MHz
+//     modem.eth.resetGpioN = 4;//GPIO4 on lora RESET pin
+//     modem.eth.dio0GpioN = 17;//GPIO17 on lora DIO0 pin to control Rxdone and Txdone interrupts
+//     modem.eth.outPower = OP20;//Output power
+//     modem.eth.powerOutPin = PA_BOOST;//Power Amplifire pin
+//     modem.eth.AGC = 1;//Auto Gain Control
+//     modem.eth.OCP = 240;// 45 to 240 mA. 0 to turn off protection
+//     modem.eth.implicitHeader = 0;//1;//Implicit header mode//0;//Explicit header mode
+//     modem.eth.syncWord = 0x12;
+//     //For detail information about SF, Error Coding Rate, Explicit header, Bandwidth, AGC, Over current protection and other features refer to sx127x datasheet https://www.semtech.com/uploads/documents/DS_SX1276-7-8-9_W_APP_V5.pdf
+
+//     // Count the number of files in the directory
+//     int nbOfFiles;
+//     nbOfFiles = nbOfFilesInDirectory();
+
+//     printf("Number of files in the directory: %d\n",nbOfFiles);
+//     // Wait for file nb response
+
+
+//     // printf("rx callback test 1\n");
+    
+//     // //img2 = modem.tx.data.buf;//stbi_load(modem.tx.data.buf, width2, height2, channels2, 0);
+//     // unsigned char *img2 = stbi_load("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallyReallySmallGray.jpg", width2, height2, channels2, 0);
+//     // // Print each byte of the buffer as a hexadecimal value
+//     // for (int i = 0; i < (256*2); i++) {
+//     //     printf("%02x ", img2[i]);
+//     // }
+    
+
+//     // printf("Read jpg into buffer\n");
+//     // const char* filePathTest;
+//     // filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.jpg";
+//     // printf("%s\n", filePathTest);
+//     // readJPGFileToBuffer(img2, filePathTest, sizeOffile);
+
+//     // printf("Write jpg into directory\n");
+//     // const char* filePathTest2;
+//     // filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.jpg";
+//     // writeFileToDisk(img2, filePathTest2, sizeOffile);
+//     // printf("Test1\n");
+//     // unsigned char* img2 = NULL;
+//     // int sizeOfFile2 = 0;
+//     // const char* filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.jpg";
+
+//     // printf("Test2\n");
+//     // readJPGFileToBuffer(&img2, filePathTest, &sizeOfFile2);
+//     // // Check for errors and handle them.
+
+//     // const char* filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.jpg";
+//     // writeFileToPath(img2, filePathTest2, sizeOfFile2);
+//     // // Check for errors and handle them.
+
+//     // printf("Test3\n");
+    
+//     //stbi_write_jpg("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copy.jpg", *width2, *height2, *channels2, img2, 100);
+
+//     char fileName[100]; //120 characters allowed in a filename string
+//     unsigned char* img = NULL;
+//     int sizeOfFile = 0;
+//     char* filePath;
+//     int nbOfFilesSent = 1;
+
+//     printf("Test4\n");
+
+//     while(1)
+//     {
+        
+
+//         //readJPGFileToBuffer(&img, filePath, &sizeOfFile);
+        
+//         printf("Test5\n");
+
+//         FILE* imageFile;
+//         static int i = 0;
+//         if (nbOfFilesSent < nbOfFiles)
+//         {
+//             sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
+//             sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
+//             printf("%s\n", filePath);
+//             nbOfFilesSent++;
+//         }
+//         if (nbOfFilesSent < nbOfFiles)
+//         {
+//             //Avoiding nonsensical segmentation fault
+//             nbOfFilesSent++;
+//             nbOfFilesSent--;
+
+//             printf("Test6\n");
+//             sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.jpg", nbOfFilesSent - 1);
+//             printf("Test7\n");
+//             sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.jpg", nbOfFilesSent - 1);
+//             printf("%s\n", filePath);
+//         }
+
+//         imageFile = fopen(fileName, "r");
+
+//         sizeOfFile_Bytes = fileSize(imageFile);
+
+//         printf("Size of file in bytes: %d\n",sizeOfFile_Bytes);
+
+//         modem.tx.data.size = sizeOfFile_Bytes;//Payload len
+
+//         readJPGFileToBuffer(&img, filePath, &sizeOfFile);
+
+//         if(img == NULL) {
+//             printf("Error in loading the image\n");
+//             exit(1);
+//         }
+
+//         memcpy(modem.tx.data.buf, img, modem.tx.data.size); //sizeof(txbuf));//copy data we'll send to buffer
+
+//         printf("image string: \"%02x\"\n\n", *modem.tx.data.buf);
+
+//         LoRa_begin(&modem);
+//         LoRa_send(&modem);
+        
+//         printf("Time on air data - Tsym: %f;\t", modem.tx.data.Tsym);
+//         printf("Tpkt: %f;\t", modem.tx.data.Tpkt);
+//         printf("payloadSymbNb: %u\n", modem.tx.data.payloadSymbNb);
+        
+//         int sleepTimeLeft = 0;
+//         bool firstTime = true;
+
+//         while((LoRa_get_op_mode(&modem) != SLEEP_MODE) && (nbOfFilesSent != extractedInt)){
+//             printf("Number of files sent: %d\n", nbOfFilesSent);
+//             sleepTimeLeft = sleep(5);
+//             printf("Senconds of sleeptime left %d seconds\n", sleepTimeLeft);
+
+//             // If files sent does not match the number of files returned then send again
+//             if ((nbOfFilesSent != extractedInt) && (firstTime != true))
+//             {
+//                 LoRa_begin(&modem);
+//                 LoRa_send(&modem);
+//             }
+//             firstTime = false;
+//         }
+
+        
+
+//         // while (transferSuccessFlag != true)
+//         // {
+//         //     printf("Sending again\n");
+//         //     LoRa_begin(&modem);
+//         //     LoRa_send(&modem);
+//         //     sleep(1);
+//         // }
+//         // Release memory
+//         //stbi_image_free(img);
+//         nbOfFilesSent++;
+//         transferSuccessFlag = false;
+//         LoRa_end(&modem);
+//     }
+// }
 
 int fileSize(FILE *fp)
 {
@@ -278,7 +494,7 @@ int nbOfFilesInDirectory(void)
     DIR * dirp;
     struct dirent * entry;
 
-    dirp = opendir("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit"); /* There should be error handling after this */
+    dirp = opendir("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit"); /* There should be error handling after this */
     if (dirp == NULL)
     {
         printf("Error opening directory");
