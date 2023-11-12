@@ -164,7 +164,7 @@ int main(){
     // printf("rx callback test 1\n");
     
     // //img2 = modem.tx.data.buf;//stbi_load(modem.tx.data.buf, width2, height2, channels2, 0);
-    // unsigned char *img2 = stbi_load("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallyReallySmallGray.jpg", width2, height2, channels2, 0);
+    // unsigned char *img2 = stbi_load("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallyReallySmallGray.WebP", width2, height2, channels2, 0);
     // // Print each byte of the buffer as a hexadecimal value
     // for (int i = 0; i < (256*2); i++) {
     //     printf("%02x ", img2[i]);
@@ -173,29 +173,29 @@ int main(){
 
     // printf("Read jpg into buffer\n");
     // const char* filePathTest;
-    // filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.jpg";
+    // filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.WebP";
     // printf("%s\n", filePathTest);
     // readJPGFileToBuffer(img2, filePathTest, sizeOffile);
 
     // printf("Write jpg into directory\n");
     // const char* filePathTest2;
-    // filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.jpg";
+    // filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.WebP";
     // writeFileToDisk(img2, filePathTest2, sizeOffile);
     printf("Test1\n");
     unsigned char* img2 = NULL;
     int sizeOfFile2 = 0;
-    const char* filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.jpg";
+    const char* filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.WebP";
 
     readJPGFileToBuffer(&img2, filePathTest, &sizeOfFile2);
     // Check for errors and handle them.
 
-    const char* filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.jpg";
+    const char* filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.WebP";
     writeFileToPath(img2, filePathTest2, sizeOfFile2);
     // Check for errors and handle them.
 
 
     
-    //stbi_write_jpg("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copy.jpg", *width2, *height2, *channels2, img2, 100);
+    //stbi_write_jpg("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copy.WebP", *width2, *height2, *channels2, img2, 100);
     char fileName[100]; //100 characters allowed in a filename string
     unsigned char* img = NULL;
     int sizeOfFile = 0;
@@ -213,8 +213,8 @@ int main(){
         static int i = 0;
         // if (nbOfFilesSent < nbOfFiles)
         // {
-        //     sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
-        //     sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
+        //     sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.WebP", nbOfFilesSent - 1);
+        //     sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.WebP", nbOfFilesSent - 1);
         //     printf("%s\n", filePath);
         //     nbOfFilesSent++;
         // }
@@ -225,9 +225,9 @@ int main(){
             nbOfFilesSent--;
 
             printf("Test6\n");
-            sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.jpg", nbOfFilesSent - 1);
+            sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.WebP", nbOfFilesSent - 1);
             printf("Test7\n");
-            sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.jpg", nbOfFilesSent - 1);
+            sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.WebP", nbOfFilesSent - 1);
             printf("%s\n", filePath);
         }
         
@@ -347,7 +347,7 @@ int main(){
 //     // printf("rx callback test 1\n");
     
 //     // //img2 = modem.tx.data.buf;//stbi_load(modem.tx.data.buf, width2, height2, channels2, 0);
-//     // unsigned char *img2 = stbi_load("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallyReallySmallGray.jpg", width2, height2, channels2, 0);
+//     // unsigned char *img2 = stbi_load("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallyReallySmallGray.WebP", width2, height2, channels2, 0);
 //     // // Print each byte of the buffer as a hexadecimal value
 //     // for (int i = 0; i < (256*2); i++) {
 //     //     printf("%02x ", img2[i]);
@@ -356,30 +356,30 @@ int main(){
 
 //     // printf("Read jpg into buffer\n");
 //     // const char* filePathTest;
-//     // filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.jpg";
+//     // filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.WebP";
 //     // printf("%s\n", filePathTest);
 //     // readJPGFileToBuffer(img2, filePathTest, sizeOffile);
 
 //     // printf("Write jpg into directory\n");
 //     // const char* filePathTest2;
-//     // filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.jpg";
+//     // filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.WebP";
 //     // writeFileToDisk(img2, filePathTest2, sizeOffile);
 //     // printf("Test1\n");
 //     // unsigned char* img2 = NULL;
 //     // int sizeOfFile2 = 0;
-//     // const char* filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.jpg";
+//     // const char* filePathTest = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/skyReallySmall.WebP";
 
 //     // printf("Test2\n");
 //     // readJPGFileToBuffer(&img2, filePathTest, &sizeOfFile2);
 //     // // Check for errors and handle them.
 
-//     // const char* filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.jpg";
+//     // const char* filePathTest2 = "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copiedImage.WebP";
 //     // writeFileToPath(img2, filePathTest2, sizeOfFile2);
 //     // // Check for errors and handle them.
 
 //     // printf("Test3\n");
     
-//     //stbi_write_jpg("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copy.jpg", *width2, *height2, *channels2, img2, 100);
+//     //stbi_write_jpg("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copy.WebP", *width2, *height2, *channels2, img2, 100);
 
 //     char fileName[100]; //120 characters allowed in a filename string
 //     unsigned char* img = NULL;
@@ -401,8 +401,8 @@ int main(){
 //         static int i = 0;
 //         if (nbOfFilesSent < nbOfFiles)
 //         {
-//             sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
-//             sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", nbOfFilesSent - 1);
+//             sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.WebP", nbOfFilesSent - 1);
+//             sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.WebP", nbOfFilesSent - 1);
 //             printf("%s\n", filePath);
 //             nbOfFilesSent++;
 //         }
@@ -413,9 +413,9 @@ int main(){
 //             nbOfFilesSent--;
 
 //             printf("Test6\n");
-//             sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.jpg", nbOfFilesSent - 1);
+//             sprintf(filePath, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.WebP", nbOfFilesSent - 1);
 //             printf("Test7\n");
-//             sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.jpg", nbOfFilesSent - 1);
+//             sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/imageSplit/imageBit_%04d.WebP", nbOfFilesSent - 1);
 //             printf("%s\n", filePath);
 //         }
 
@@ -578,7 +578,7 @@ void writeFileToPath(unsigned char* jpgBuffer, const char* newFilePath, int file
     // }
     // printf("Loaded image with a width of %dpx, a height of %dpx and %d channels\n", *width2, *height2, *channels2);
 
-    // stbi_write_jpg("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copy.jpg", *width2, *height2, *channels2, img2, 100);
+    // stbi_write_jpg("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copy.WebP", *width2, *height2, *channels2, img2, 100);
 
 
     // // Don't forget to free the dynamically allocated memory when you're done with it
@@ -606,7 +606,7 @@ void writeFileToPath(unsigned char* jpgBuffer, const char* newFilePath, int file
     // Image* image;
 
     // printf("Trying to create image from binary data\n");
-    // sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/BBBBB.jpg");
+    // sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/BBBBB.WebP");
     // printf("%s\n", fileName);
 
     // uint8_t* data = malloc(10);
@@ -640,7 +640,7 @@ void writeFileToPath(unsigned char* jpgBuffer, const char* newFilePath, int file
     // printf("Loaded image with a width of %dpx, a height of %dpx and %d channels\n", *width2, *height2, *channels2);
 
     // Image_save(image, fileName); //Save this structure to a file and write jpg
-    // //stbi_write_jpg("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copy.jpg", *width2, *height2, *channels2, img2, 100);
+    // //stbi_write_jpg("/home/ubagley18/Documents/projects/LoRaImageTransfer/src/copy.WebP", *width2, *height2, *channels2, img2, 100);
 
 
     // END IMAGE CREATE FROM PIXEL DATA TEST
@@ -658,7 +658,7 @@ void writeFileToPath(unsigned char* jpgBuffer, const char* newFilePath, int file
     //     static int i = 0;
     //     if (i < nbOfFiles)
     //     {
-    //         sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.jpg", i);
+    //         sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageTransfer/src/testSplit/image_%04d.WebP", i);
     //         printf("%s\n", fileName);
     //         i++;
     //     }

@@ -3,6 +3,9 @@
 #Take a photo and place it in the image library
 libcamera-still -o imageLibrary/imageBig.jpg
 
+# Rotate because camera is upside down
+convert imageLibrary/imageBig.jpg -rotate 180 imageLibrary/imageBig.jpg
+
 #Crop image down into 32x24 <255 byte images: 
 #1 Reduce image size, \! makes the resize ignore aspect ratio and hence actually will size to the specified dimensions
 convert imageLibrary/imageBig.jpg -resize 512x384\! imageLibrary/imageLittle.jpg
@@ -11,7 +14,7 @@ convert imageLibrary/imageBig.jpg -resize 512x384\! imageLibrary/imageLittle.jpg
 convert imageLibrary/imageLittle.jpg -grayscale Rec709Luma imageLibrary/imageGray.jpg
 
 #3. then reduce quality
-convert -strip -interlace Plane -gaussian-blur 0.05 -quality 50% imageLibrary/imageGray.jpg imageLibrary/imageBlur.jpg
+convert -strip -interlace Plane -gaussian-blur 0.6 -quality 50% imageLibrary/imageGray.jpg imageLibrary/imageBlur.jpg
 			
 #4. then crop (use %04d so files are in order)
 convert imageLibrary/imageBlur.jpg -crop 32x24\! imageSplit/imageBit_%04d.jpg
